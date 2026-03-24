@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Antony Rajan — Developer Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;500;700;900&family=Figtree:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green:     #1DB954;
+  --green-d:   #158a3e;
+  --green-l:   #1ed760;
+  --bg:        #121212;
+  --surface:   #181818;
+  --surface2:  #232323;
+  --surface3:  #2a2a2a;
+  --elevated:  #282828;
+  --text:      #FFFFFF;
+  --text-sub:  #B3B3B3;
+  --text-dim:  #6a6a6a;
+  --sidebar-w: 280px;
+  --topbar-h:  64px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Figtree', sans-serif;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+  overflow: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ─────────────────────────── */
+#cur { position:fixed;z-index:9999;pointer-events:none;width:10px;height:10px;background:var(--green);border-radius:50%;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .2s; }
+#cur-trail { position:fixed;z-index:9998;pointer-events:none;width:28px;height:28px;border:1.5px solid rgba(29,185,84,.35);border-radius:50%;transform:translate(-50%,-50%);transition:width .2s,height .2s; }
+
+/* ── SIDEBAR ────────────────────────── */
+#sidebar {
+  background: #000;
+  padding: 24px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  grid-row: 1 / 2;
+  z-index: 10;
+}
+#sidebar::-webkit-scrollbar { width: 0; }
+
+.sidebar-logo {
+  padding: 8px 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 16px; color: #000;
+}
+.logo-text {
+  font-weight: 900; font-size: 18px; letter-spacing: -.5px;
+}
+
+.nav-section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-dim);
+  padding: 8px 12px 4px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: var(--text-sub);
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: none;
+  transition: color .1s, background .1s;
+  position: relative;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,.07); }
+.nav-item.active { color: var(--text); }
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 25%; bottom: 25%;
+  width: 3px; border-radius: 0 2px 2px 0;
+  background: var(--green);
+}
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+.sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 8px 12px; }
+
+/* Playlist items in sidebar */
+.playlist-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: 6px;
+  cursor: none; transition: background .1s;
+}
+.playlist-item:hover { background: rgba(255,255,255,.07); }
+.playlist-thumb {
+  width: 40px; height: 40px; border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 14px; color: #000;
+}
+.playlist-info {}
+.playlist-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.playlist-meta { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
+
+/* ── MAIN ───────────────────────────── */
+#main {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  scroll-behavior: smooth;
+}
+#main::-webkit-scrollbar { width: 6px; }
+#main::-webkit-scrollbar-track { background: transparent; }
+#main::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+
+/* ── TOP BAR ────────────────────────── */
+#topbar {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--topbar-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  background: transparent;
+  transition: background .3s;
+}
+#topbar.filled { background: rgba(18,18,18,.95); backdrop-filter: blur(12px); }
+.topbar-nav { display: flex; gap: 8px; }
+.topbar-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,.7);
+  border: none; color: var(--text); cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+  transition: background .15s;
+}
+.topbar-btn:hover { background: rgba(0,0,0,.9); }
+.topbar-user {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,.7);
+  border-radius: 24px; padding: 4px 16px 4px 4px;
+  cursor: none;
+}
+.topbar-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #000;
+}
+.topbar-name { font-size: 13px; font-weight: 700; }
+
+/* ── HERO BANNER ────────────────────── */
+.hero-banner {
+  height: 340px;
+  background: linear-gradient(180deg, #1a6b3c 0%, #145c33 40%, #0e4527 70%, var(--bg) 100%);
+  padding: 0 32px;
+  display: flex; align-items: flex-end;
+  padding-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 30% 50%, rgba(29,185,84,.15) 0%, transparent 70%);
+}
+.hero-banner-noise {
+  position: absolute; inset: 0; opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+.hero-cover {
+  width: 200px; height: 200px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #158a3e 0%, #0d6b30 50%, #0a5526 100%);
+  box-shadow: 0 16px 48px rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.hero-cover-initials {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 900; font-size: 72px; letter-spacing: -4px;
+  color: rgba(255,255,255,.9);
+}
+.hero-meta {
+  margin-left: 28px;
+  position: relative; z-index: 1;
+}
+.hero-type {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.hero-name {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 72px);
+  letter-spacing: -2px; line-height: 1;
+  margin-bottom: 14px;
+}
+.hero-desc {
+  font-size: 14px; color: rgba(255,255,255,.7);
+  margin-bottom: 12px; max-width: 500px; line-height: 1.5;
+}
+.hero-stats {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: rgba(255,255,255,.7);
+}
+.hero-stats strong { color: var(--text); font-weight: 700; }
+.hero-stats-dot { opacity: .4; }
+
+/* ── CONTROLS BAR ───────────────────── */
+.controls-bar {
+  padding: 24px 32px 8px;
+  display: flex; align-items: center; gap: 24px;
+}
+.play-btn {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--green);
+  border: none; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(29,185,84,.4);
+  transition: transform .15s, background .15s;
+  flex-shrink: 0;
+}
+.play-btn:hover { transform: scale(1.06); background: var(--green-l); }
+.play-btn svg { width: 22px; height: 22px; fill: #000; margin-left: 3px; }
+
+.ctrl-btn {
+  background: none; border: none; cursor: none;
+  color: var(--text-sub);
+  display: flex; align-items: center;
+  transition: color .15s;
+  font-size: 13px; font-weight: 600;
+  gap: 6px;
+}
+.ctrl-btn:hover { color: var(--text); }
+.ctrl-btn svg { width: 20px; height: 20px; }
+
+.follow-btn {
+  border: 1px solid rgba(255,255,255,.3);
+  background: none; color: var(--text);
+  padding: 7px 20px; border-radius: 24px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: none; letter-spacing: .5px;
+  transition: border-color .15s, transform .15s;
+}
+.follow-btn:hover { border-color: white; transform: scale(1.02); }
+
+/* ── SECTION LABEL ──────────────────── */
+.section-header {
+  padding: 24px 32px 16px;
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.section-title {
+  font-size: 22px; font-weight: 900; letter-spacing: -.5px;
+}
+.section-more {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-sub); cursor: none;
+  transition: color .15s; text-decoration: none;
+}
+.section-more:hover { color: var(--text); text-decoration: underline; }
+
+/* ── TRACK LIST (Projects as songs) ─── */
+.tracklist {
+  padding: 0 32px;
+}
+.tracklist-header {
+  display: grid;
+  grid-template-columns: 40px 4fr 3fr 2fr 80px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  margin-bottom: 4px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.track-row {
+  display: grid;
+  grid-template-columns: 40px 4fr 3fr 2fr 80px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  align-items: center;
+  cursor: none;
+  transition: background .1s;
+  position: relative;
+  group: true;
+}
+.track-row:hover { background: rgba(255,255,255,.07); }
+.track-row:hover .track-num { display: none; }
+.track-row:hover .track-play { display: flex; }
+.track-row.playing .track-num { display: none; }
+.track-row.playing .track-play { display: flex; }
+.track-row.playing .track-name { color: var(--green); }
+
+.track-num {
+  font-size: 15px; color: var(--text-dim); text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.track-play {
+  display: none;
+  align-items: center; justify-content: flex-end;
+  color: var(--text);
+}
+.track-play svg { width: 16px; height: 16px; fill: currentColor; }
+
+.track-main { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.track-thumb {
+  width: 42px; height: 42px; border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 14px;
+}
+.track-info { min-width: 0; }
+.track-name {
+  font-size: 15px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: color .1s;
+}
+.track-sub { font-size: 13px; color: var(--text-sub); margin-top: 1px; }
+
+.track-album { font-size: 13px; color: var(--text-sub); }
+.track-date { font-size: 13px; color: var(--text-sub); }
+.track-duration {
+  font-size: 13px; color: var(--text-dim); text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── CARD GRID (Skills / Experience) ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 0 32px;
+}
+.card {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 20px;
+  cursor: none;
+  transition: background .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.card:hover { background: var(--elevated); transform: translateY(-2px); }
+.card-cover {
+  width: 100%; aspect-ratio: 1;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.card-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.2; }
+.card-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; }
+
+/* Circular progress on skill cards */
+.skill-card-content { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.skill-ring { position: relative; width: 80px; height: 80px; }
+.skill-ring svg { transform: rotate(-90deg); }
+.skill-ring-bg { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 4; }
+.skill-ring-fill { fill: none; stroke: var(--green); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+.skill-ring-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: var(--text);
+}
+.skill-card-name { font-size: 13px; font-weight: 700; text-align: center; }
+.skill-card-tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+.skill-card-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: .5px;
+  padding: 2px 8px; border-radius: 24px;
+  background: rgba(255,255,255,.08); color: var(--text-sub);
+}
+
+/* ── FEATURED ARTIST ROW ────────────── */
+.artist-row {
+  display: flex; gap: 16px;
+  padding: 0 32px;
+  overflow-x: auto; padding-bottom: 8px;
+}
+.artist-row::-webkit-scrollbar { height: 0; }
+.artist-card {
+  flex-shrink: 0; width: 160px;
+  background: var(--surface);
+  border-radius: 8px; padding: 16px;
+  text-align: center; cursor: none;
+  transition: background .2s, transform .2s;
+}
+.artist-card:hover { background: var(--elevated); transform: translateY(-2px); }
+.artist-avatar {
+  width: 120px; height: 120px; border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 900;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+.artist-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.artist-type { font-size: 12px; color: var(--text-sub); }
+
+/* ── NOW PLAYING BAR ────────────────── */
+#now-playing {
+  grid-column: 1 / -1;
+  background: #181818;
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 0 24px;
+  height: 88px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 100;
+}
+.np-left { display: flex; align-items: center; gap: 14px; width: 280px; }
+.np-thumb {
+  width: 54px; height: 54px; border-radius: 4px;
+  background: linear-gradient(135deg, #1a6b3c, #0e4527);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900; color: rgba(255,255,255,.8);
+  flex-shrink: 0;
+}
+.np-info {}
+.np-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.np-artist { font-size: 11px; color: var(--text-sub); }
+.np-heart {
+  background: none; border: none; cursor: none;
+  color: var(--green); font-size: 16px;
+  transition: transform .15s;
+}
+.np-heart:hover { transform: scale(1.2); }
+
+.np-center { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.np-controls { display: flex; align-items: center; gap: 24px; }
+.np-ctrl {
+  background: none; border: none; cursor: none;
+  color: var(--text-sub); transition: color .15s;
+  display: flex; align-items: center;
+}
+.np-ctrl:hover { color: var(--text); }
+.np-ctrl svg { width: 18px; height: 18px; }
+.np-play {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--text); border: none; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .1s, background .1s;
+}
+.np-play:hover { transform: scale(1.06); }
+.np-play svg { width: 14px; height: 14px; fill: #000; margin-left: 2px; }
+.np-play.paused svg { margin-left: 0; }
+
+.np-progress { width: 100%; max-width: 480px; display: flex; align-items: center; gap: 10px; }
+.np-time { font-size: 11px; color: var(--text-sub); min-width: 32px; font-variant-numeric: tabular-nums; }
+.np-bar { flex: 1; height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; position: relative; cursor: none; }
+.np-bar-fill { height: 100%; background: var(--text); border-radius: 2px; transition: width .5s linear; }
+.np-bar:hover .np-bar-fill { background: var(--green); }
+
+.np-right { display: flex; align-items: center; gap: 14px; width: 240px; justify-content: flex-end; }
+.np-vol { display: flex; align-items: center; gap: 8px; }
+.np-vol svg { width: 16px; height: 16px; color: var(--text-sub); }
+.np-vol-bar { width: 80px; height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; cursor: none; }
+.np-vol-fill { height: 100%; width: 70%; background: var(--text); border-radius: 2px; transition: width .1s; }
+.np-vol-bar:hover .np-vol-fill { background: var(--green); }
+
+/* ── CONTACT SECTION ────────────────── */
+.contact-section { padding: 24px 32px 48px; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.contact-card {
+  background: var(--surface);
+  border-radius: 8px; padding: 24px;
+  display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: var(--text);
+  cursor: none; transition: background .2s;
+}
+.contact-card:hover { background: var(--elevated); }
+.contact-card-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(29,185,84,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.contact-card-label { font-size: 11px; color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.contact-card-val { font-size: 14px; font-weight: 600; }
+
+.contact-form-card {
+  background: var(--surface); border-radius: 8px; padding: 28px;
+}
+.cf-title { font-size: 18px; font-weight: 900; margin-bottom: 20px; letter-spacing: -.3px; }
+.cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cf-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cf-field.full { grid-column: 1 / -1; }
+.cf-lbl { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-sub); }
+.cf-inp, .cf-ta {
+  background: var(--surface2);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 4px;
+  color: var(--text); font-family: 'Figtree', sans-serif;
+  font-size: 14px; padding: 12px 14px; outline: none;
+  transition: border-color .15s; cursor: none; width: 100%;
+}
+.cf-inp:focus, .cf-ta:focus { border-color: rgba(29,185,84,.5); }
+.cf-ta { resize: vertical; min-height: 100px; }
+.cf-submit {
+  background: var(--green); color: #000;
+  border: none; border-radius: 24px; cursor: none;
+  font-family: 'Figtree', sans-serif; font-size: 14px;
+  font-weight: 700; padding: 14px 36px; margin-top: 16px;
+  transition: background .15s, transform .15s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.cf-submit:hover:not(:disabled) { background: var(--green-l); transform: scale(1.02); }
+.cf-submit:disabled { opacity: .5; }
+.cf-msg { margin-top: 12px; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: none; }
+.cf-msg.ok { background: rgba(29,185,84,.1); color: var(--green); border: 1px solid rgba(29,185,84,.2); display: block; }
+.cf-msg.err { background: rgba(220,38,38,.08); color: #fca5a5; border: 1px solid rgba(220,38,38,.15); display: block; }
+
+/* ── MISC ───────────────────────────── */
+.spacer { height: 32px; }
+.page { display: none; }
+.page.active { display: block; }
+
+.fade-in { animation: fadeIn .25s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* Green playing equaliser animation */
+.eq { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+.eq span { width: 3px; background: var(--green); border-radius: 1px; animation: eqBar .8s ease-in-out infinite alternate; }
+.eq span:nth-child(1) { animation-delay: 0s; }
+.eq span:nth-child(2) { animation-delay: .2s; }
+.eq span:nth-child(3) { animation-delay: .1s; }
+@keyframes eqBar {
+  from { height: 4px; }
+  to { height: 14px; }
+}
+
+@media (max-width: 768px) {
+  body { grid-template-columns: 1fr; }
+  #sidebar { display: none; }
+  .hero-banner { height: auto; padding: 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .hero-cover { width: 120px; height: 120px; }
+  .hero-meta { margin-left: 0; }
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+  .cf-grid { grid-template-columns: 1fr; }
+  .tracklist-header, .track-row { grid-template-columns: 32px 1fr 80px; }
+  .track-album, .track-date { display: none; }
+  #now-playing { padding: 0 16px; }
+  .np-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-trail"></div>
+
+<!-- ── SIDEBAR ─────────────────────────────────── -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">AR</div>
+    <div class="logo-text">DevProfile</div>
+  </div>
+
+  <div class="nav-section-label">Menu</div>
+  <a class="nav-item active" href="#" onclick="showPage('home',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Home
+  </a>
+  <a class="nav-item" href="#" onclick="showPage('projects',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    Projects
+  </a>
+  <a class="nav-item" href="#" onclick="showPage('skills',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+    Skills
+  </a>
+  <a class="nav-item" href="#" onclick="showPage('experience',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 15.49 0 12.36 0c-1.7 0-3.21.75-4.27 1.94L7 3 5.91 1.94C4.85.75 3.34 0 1.64 0-1.49 0 0 2.51 0 4.64 0 5.12.11 5.56.18 6H-1v2h22V6z"/></svg>
+    Experience
+  </a>
+  <a class="nav-item" href="#" onclick="showPage('contact',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    Contact
+  </a>
+
+  <div class="sidebar-divider"></div>
+  <div class="nav-section-label">Playlists</div>
+
+  <div class="playlist-item" onclick="showPage('projects',document.querySelectorAll('.nav-item')[1])">
+    <div class="playlist-thumb" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">P</div>
+    <div class="playlist-info">
+      <div class="playlist-name">Projects</div>
+      <div class="playlist-meta">Playlist · 6 tracks</div>
+    </div>
+  </div>
+  <div class="playlist-item" onclick="showPage('skills',document.querySelectorAll('.nav-item')[2])">
+    <div class="playlist-thumb" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">S</div>
+    <div class="playlist-info">
+      <div class="playlist-name">Tech Stack</div>
+      <div class="playlist-meta">Playlist · 12 skills</div>
+    </div>
+  </div>
+  <div class="playlist-item" onclick="showPage('experience',document.querySelectorAll('.nav-item')[3])">
+    <div class="playlist-thumb" style="background:linear-gradient(135deg,#6b1a3a,#3d0a1f);">E</div>
+    <div class="playlist-info">
+      <div class="playlist-name">Work History</div>
+      <div class="playlist-meta">Playlist · 2 tracks</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN CONTENT ─────────────────────────────── -->
+<main id="main">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="topbar-nav">
+      <button class="topbar-btn" onclick="history.back()">‹</button>
+      <button class="topbar-btn" onclick="history.forward()">›</button>
+    </div>
+    <div class="topbar-user">
+      <div class="topbar-avatar">AR</div>
+      <span class="topbar-name">Antony Rajan</span>
+    </div>
+  </div>
+
+  <!-- ══ HOME PAGE ══════════════════════════════ -->
+  <div id="page-home" class="page active fade-in">
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-banner-noise"></div>
+      <div class="hero-cover">
+        <div class="hero-cover-initials">AR</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-type">Developer Profile</div>
+        <div class="hero-name">Antony Rajan</div>
+        <div class="hero-desc">Software Engineering student @ RMIT · Full-Stack · Cloud · AI/ML · Melbourne, AU</div>
+        <div class="hero-stats">
+          <strong>8+</strong> <span class="hero-stats-dot">·</span>
+          Projects &nbsp;<strong>5+</strong> <span class="hero-stats-dot">·</span>
+          Languages &nbsp;<strong>2027</strong> <span class="hero-stats-dot">·</span>
+          Graduating
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <button class="play-btn" onclick="togglePlay()" id="hero-play">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="showPage('projects',document.querySelectorAll('.nav-item')[1])">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Follow
+      </button>
+      <button class="ctrl-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+
+    <!-- Top Projects -->
+    <div class="section-header">
+      <div class="section-title">Top Projects</div>
+      <a class="section-more" href="#" onclick="showPage('projects',document.querySelectorAll('.nav-item')[1])">Show all</a>
+    </div>
+    <div class="tracklist">
+      <div class="tracklist-header">
+        <div>#</div><div>Title</div><div>Stack</div><div>Year</div><div style="text-align:right;">Duration</div>
+      </div>
+      <div class="track-row playing" onclick="playTrack(this, 'EventHub', 'Java · Spring Boot · MySQL')">
+        <div class="track-num">
+          <div class="eq"><span></span><span></span><span></span></div>
+        </div>
+        <div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">
+            <span style="color:rgba(255,255,255,.8);font-size:16px;">⚡</span>
+          </div>
+          <div class="track-info">
+            <div class="track-name">EventHub</div>
+            <div class="track-sub">Full-stack event platform</div>
+          </div>
+        </div>
+        <div class="track-album">Java · Spring Boot · MySQL</div>
+        <div class="track-date">2024</div>
+        <div class="track-duration">8+ APIs</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'TutorConnect','React · Node.js · JavaScript')">
+        <div class="track-num">2</div>
+        <div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">
+            <span style="color:rgba(255,255,255,.8);font-size:16px;">🎓</span>
+          </div>
+          <div class="track-info">
+            <div class="track-name">TutorConnect</div>
+            <div class="track-sub">Tutor hiring web app</div>
+          </div>
+        </div>
+        <div class="track-album">React · Node.js</div>
+        <div class="track-date">2024</div>
+        <div class="track-duration">MVC</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Maze Solver','Python · A* · BFS · DFS')">
+        <div class="track-num">3</div>
+        <div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#00081a,#00102d);">
+            <span style="color:rgba(255,255,255,.8);font-size:16px;">🧩</span>
+          </div>
+          <div class="track-info">
+            <div class="track-name">Maze Solver</div>
+            <div class="track-sub">Pathfinding visualiser</div>
+          </div>
+        </div>
+        <div class="track-album">Python · A* · BFS</div>
+        <div class="track-date">2023</div>
+        <div class="track-duration">3 algos</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'AI Classifier','Python · scikit-learn · ML')">
+        <div class="track-num">4</div>
+        <div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#2d1a6b,#180a3d);">
+            <span style="color:rgba(255,255,255,.8);font-size:16px;">🤖</span>
+          </div>
+          <div class="track-info">
+            <div class="track-name">AI Classifier</div>
+            <div class="track-sub">Predictive ML models</div>
+          </div>
+        </div>
+        <div class="track-album">Python · scikit-learn</div>
+        <div class="track-date">2024</div>
+        <div class="track-duration">85%+ acc</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Minecraft AI','C++ · Graph Traversal · AI')">
+        <div class="track-num">5</div>
+        <div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#1a6b1a,#0a3d0a);">
+            <span style="color:rgba(255,255,255,.8);font-size:16px;">🎮</span>
+          </div>
+          <div class="track-info">
+            <div class="track-name">Minecraft AI</div>
+            <div class="track-sub">Autonomous pathfinding bot</div>
+          </div>
+        </div>
+        <div class="track-album">C++ · AI</div>
+        <div class="track-date">2023</div>
+        <div class="track-duration">C++</div>
+      </div>
+    </div>
+
+    <!-- About Artist cards -->
+    <div class="section-header" style="margin-top:32px;">
+      <div class="section-title">Featured In</div>
+    </div>
+    <div class="artist-row">
+      <div class="artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">🎓</div>
+        <div class="artist-name">RMIT University</div>
+        <div class="artist-type">Melbourne, AU</div>
+      </div>
+      <div class="artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">☁</div>
+        <div class="artist-name">Cloud Computing</div>
+        <div class="artist-type">AWS · Docker</div>
+      </div>
+      <div class="artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#6b1a3a,#3d0a1f);">🤖</div>
+        <div class="artist-name">AI / ML</div>
+        <div class="artist-type">Python · scikit-learn</div>
+      </div>
+      <div class="artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#6b6b1a,#3d3d0a);">🔬</div>
+        <div class="artist-name">QA & Testing</div>
+        <div class="artist-type">Selenium · Cucumber</div>
+      </div>
+      <div class="artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a6b6b,#0a3d3d);">🔒</div>
+        <div class="artist-name">Cybersecurity</div>
+        <div class="artist-type">Kali Linux</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ══ PROJECTS PAGE ══════════════════════════ -->
+  <div id="page-projects" class="page">
+    <div class="hero-banner" style="background:linear-gradient(180deg,#1a3a6b 0%,#0e2445 50%,var(--bg) 100%);">
+      <div class="hero-banner-noise"></div>
+      <div class="hero-cover" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">
+        <div class="hero-cover-initials" style="font-size:56px;">💻</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-type">Playlist</div>
+        <div class="hero-name">Projects</div>
+        <div class="hero-desc">All my builds — full-stack apps, AI/ML models, algorithms, and more.</div>
+        <div class="hero-stats"><strong>Antony Rajan</strong> <span class="hero-stats-dot">·</span> 6 projects</div>
+      </div>
+    </div>
+    <div class="controls-bar">
+      <button class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button>
+    </div>
+    <div class="tracklist">
+      <div class="tracklist-header">
+        <div>#</div><div>Project</div><div>Tech Stack</div><div>Year</div><div style="text-align:right;">Highlight</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'EventHub','Java · Spring Boot · MySQL · Docker')">
+        <div class="track-num">1</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">⚡</div><div class="track-info"><div class="track-name">EventHub</div><div class="track-sub">Full-stack event management · Spring Boot + MySQL + Docker + CI/CD</div></div></div>
+        <div class="track-album">Java · Spring Boot</div><div class="track-date">2024</div><div class="track-duration">8+ APIs</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'TutorConnect','React · Node.js · JavaScript · MVC')">
+        <div class="track-num">2</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">🎓</div><div class="track-info"><div class="track-name">TutorConnect</div><div class="track-sub">Tutor hiring platform · Multi-role dashboard · Auth + form validation</div></div></div>
+        <div class="track-album">React · Node.js</div><div class="track-date">2024</div><div class="track-duration">MVC</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Maze Solver','Python · A* · BFS · DFS · Jupyter')">
+        <div class="track-num">3</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#00081a,#00102d);">🧩</div><div class="track-info"><div class="track-name">Maze Solver</div><div class="track-sub">2D/3D pathfinding visualiser · A*, BFS, DFS benchmarked across 10+ configs</div></div></div>
+        <div class="track-album">Python · A*</div><div class="track-date">2023</div><div class="track-duration">3 algos</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'AI Classifier','Python · scikit-learn · pandas')">
+        <div class="track-num">4</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#2d1a6b,#180a3d);">🤖</div><div class="track-info"><div class="track-name">AI Classifier</div><div class="track-sub">Supervised ML models · Classification + predictive analysis · 85%+ accuracy</div></div></div>
+        <div class="track-album">Python · ML</div><div class="track-date">2024</div><div class="track-duration">85% acc</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Minecraft AI','C++ · Graph Traversal · Pathfinding')">
+        <div class="track-num">5</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#1a6b1a,#0a3d0a);">🎮</div><div class="track-info"><div class="track-name">Minecraft AI</div><div class="track-sub">Autonomous maze bot · C++ graph traversal in real-time 3D environment</div></div></div>
+        <div class="track-album">C++ · AI</div><div class="track-date">2023</div><div class="track-duration">C++</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Testing Suite','JUnit · Selenium · Cucumber · BDD')">
+        <div class="track-num">6</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#6b1a1a,#3d0a0a);">🔬</div><div class="track-info"><div class="track-name">Testing Suite</div><div class="track-sub">Automated BDD testing · Selenium UI + Cucumber scenarios · 5+ bugs found</div></div></div>
+        <div class="track-album">JUnit · Selenium</div><div class="track-date">2024</div><div class="track-duration">5+ bugs</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ══ SKILLS PAGE ════════════════════════════ -->
+  <div id="page-skills" class="page">
+    <div class="hero-banner" style="background:linear-gradient(180deg,#2d1a6b 0%,#1a0e45 50%,var(--bg) 100%);">
+      <div class="hero-banner-noise"></div>
+      <div class="hero-cover" style="background:linear-gradient(135deg,#2d1a6b,#180a3d);">
+        <div class="hero-cover-initials" style="font-size:56px;">⚡</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-type">Playlist</div>
+        <div class="hero-name">Tech Stack</div>
+        <div class="hero-desc">All the languages, frameworks, tools and practices I work with.</div>
+        <div class="hero-stats"><strong>Antony Rajan</strong> <span class="hero-stats-dot">·</span> 20+ skills</div>
+      </div>
+    </div>
+    <div class="controls-bar">
+      <button class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button>
+    </div>
+    <div class="section-header"><div class="section-title">Languages</div></div>
+    <div class="card-grid" id="skills-langs">
+      <div class="card reveal"><div class="skill-card-content">
+        <div class="skill-ring"><svg viewBox="0 0 80 80"><circle class="skill-ring-bg" cx="40" cy="40" r="34"/><circle class="skill-ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="21" data-pct="0.9"/></svg><div class="skill-ring-label">90%</div></div>
+        <div class="skill-card-name">Java</div><div class="skill-card-tags"><span class="skill-card-tag">OOP</span><span class="skill-card-tag">Spring</span></div>
+      </div></div>
+      <div class="card reveal"><div class="skill-card-content">
+        <div class="skill-ring"><svg viewBox="0 0 80 80"><circle class="skill-ring-bg" cx="40" cy="40" r="34"/><circle class="skill-ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="32" data-pct="0.85"/></svg><div class="skill-ring-label">85%</div></div>
+        <div class="skill-card-name">Python</div><div class="skill-card-tags"><span class="skill-card-tag">ML</span><span class="skill-card-tag">Algorithms</span></div>
+      </div></div>
+      <div class="card reveal"><div class="skill-card-content">
+        <div class="skill-ring"><svg viewBox="0 0 80 80"><circle class="skill-ring-bg" cx="40" cy="40" r="34"/><circle class="skill-ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="43" data-pct="0.8"/></svg><div class="skill-ring-label">80%</div></div>
+        <div class="skill-card-name">JavaScript</div><div class="skill-card-tags"><span class="skill-card-tag">ES6+</span><span class="skill-card-tag">Node</span></div>
+      </div></div>
+      <div class="card reveal"><div class="skill-card-content">
+        <div class="skill-ring"><svg viewBox="0 0 80 80"><circle class="skill-ring-bg" cx="40" cy="40" r="34"/><circle class="skill-ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="53" data-pct="0.75"/></svg><div class="skill-ring-label">75%</div></div>
+        <div class="skill-card-name">SQL</div><div class="skill-card-tags"><span class="skill-card-tag">MySQL</span><span class="skill-card-tag">Schema</span></div>
+      </div></div>
+      <div class="card reveal"><div class="skill-card-content">
+        <div class="skill-ring"><svg viewBox="0 0 80 80"><circle class="skill-ring-bg" cx="40" cy="40" r="34"/><circle class="skill-ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="75" data-pct="0.65"/></svg><div class="skill-ring-label">65%</div></div>
+        <div class="skill-card-name">C++</div><div class="skill-card-tags"><span class="skill-card-tag">Algorithms</span></div>
+      </div></div>
+    </div>
+    <div class="section-header" style="margin-top:24px;"><div class="section-title">Frameworks & Tools</div></div>
+    <div class="card-grid">
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">🌿</div><div class="card-name">Spring Boot</div><div class="card-desc">RESTful APIs, MVC, JPA, Maven</div></div>
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#1a3a6b,#0a1f3d);">⚛</div><div class="card-name">React</div><div class="card-desc">Component architecture, hooks, state</div></div>
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#1a6b1a,#0a3d0a);">🟩</div><div class="card-name">Node.js</div><div class="card-desc">Express, REST APIs, middleware</div></div>
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#00081a,#003d6b);">🐳</div><div class="card-name">Docker</div><div class="card-desc">Containerisation, deployment</div></div>
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#6b3a1a,#3d1f0a);">☁</div><div class="card-name">AWS</div><div class="card-desc">EC2, S3, cloud fundamentals</div></div>
+      <div class="card reveal"><div class="card-cover" style="background:linear-gradient(135deg,#6b1a1a,#3d0a0a);">🔬</div><div class="card-name">Selenium</div><div class="card-desc">UI testing, WebDriver</div></div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ══ EXPERIENCE PAGE ════════════════════════ -->
+  <div id="page-experience" class="page">
+    <div class="hero-banner" style="background:linear-gradient(180deg,#6b1a3a 0%,#45102a 50%,var(--bg) 100%);">
+      <div class="hero-banner-noise"></div>
+      <div class="hero-cover" style="background:linear-gradient(135deg,#6b1a3a,#3d0a1f);">
+        <div class="hero-cover-initials" style="font-size:56px;">💼</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-type">Playlist</div>
+        <div class="hero-name">Work History</div>
+        <div class="hero-desc">My career journey — roles where I've developed technical and interpersonal skills.</div>
+        <div class="hero-stats"><strong>Antony Rajan</strong> <span class="hero-stats-dot">·</span> 2 roles</div>
+      </div>
+    </div>
+    <div class="controls-bar"><button class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button></div>
+    <div class="tracklist">
+      <div class="tracklist-header"><div>#</div><div>Role</div><div>Company</div><div>Period</div><div style="text-align:right;"></div></div>
+      <div class="track-row" onclick="playTrack(this,'Sales Associate','Palermo Perfumes · Melbourne')">
+        <div class="track-num">1</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#6b1a3a,#3d0a1f);">💼</div><div class="track-info"><div class="track-name">Sales Associate</div><div class="track-sub">Exceeded daily KPIs · Inventory & merchandising · Customer consultation</div></div></div>
+        <div class="track-album">Palermo Perfumes</div><div class="track-date">May 2025–Now</div><div class="track-duration">Current</div>
+      </div>
+      <div class="track-row" onclick="playTrack(this,'Sales Executive / Supervisor','Nature\'s Shield · Melbourne')">
+        <div class="track-num">2</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#1a5a1a,#0a330a);">🌿</div><div class="track-info"><div class="track-name">Sales Executive / Supervisor</div><div class="track-sub">Website updates · B2B + B2C sales · Ops management · Team supervision</div></div></div>
+        <div class="track-album">Nature's Shield</div><div class="track-date">Sep 2023–Jul 2025</div><div class="track-duration">2 yrs</div>
+      </div>
+    </div>
+    <div class="section-header" style="margin-top:32px;"><div class="section-title">Education</div></div>
+    <div class="tracklist">
+      <div class="track-row" onclick="playTrack(this,'Bachelor of Software Engineering','RMIT University · Melbourne')">
+        <div class="track-num">1</div><div class="track-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <div class="track-main"><div class="track-thumb" style="background:linear-gradient(135deg,#0048a8,#002d6b);">🎓</div><div class="track-info"><div class="track-name">Bachelor of Software Engineering (Professional)</div><div class="track-sub">Minors: Data Science · Cloud Computing · Business Data Management</div></div></div>
+        <div class="track-album">RMIT University</div><div class="track-date">2023–2027</div><div class="track-duration">In progress</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ══ CONTACT PAGE ═══════════════════════════ -->
+  <div id="page-contact" class="page">
+    <div class="hero-banner" style="background:linear-gradient(180deg,#1a5a1a 0%,#0e3d0e 50%,var(--bg) 100%);">
+      <div class="hero-banner-noise"></div>
+      <div class="hero-cover" style="background:linear-gradient(135deg,#1a6b3c,#0a3d1f);">
+        <div class="hero-cover-initials" style="font-size:56px;">✉</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-type">Connect</div>
+        <div class="hero-name">Get in Touch</div>
+        <div class="hero-desc">Open to internships, graduate roles, and interesting collaborations.</div>
+        <div class="hero-stats"><strong>Melbourne, AU</strong> <span class="hero-stats-dot">·</span> Usually replies within 48h</div>
+      </div>
+    </div>
+    <div class="contact-section">
+      <div class="contact-grid">
+        <a href="mailto:itsantonyrajan@gmail.com" class="contact-card">
+          <div class="contact-card-icon">✉</div>
+          <div><div class="contact-card-label">Email</div><div class="contact-card-val">itsantonyrajan@gmail.com</div></div>
+        </a>
+        <a href="tel:+61411809726" class="contact-card">
+          <div class="contact-card-icon">📱</div>
+          <div><div class="contact-card-label">Phone</div><div class="contact-card-val">+61 411 809 726</div></div>
+        </a>
+        <a href="https://linkedin.com/in/antony-rajan-3b9844219" target="_blank" class="contact-card">
+          <div class="contact-card-icon">in</div>
+          <div><div class="contact-card-label">LinkedIn</div><div class="contact-card-val">antony-rajan-3b9844219</div></div>
+        </a>
+        <a href="https://github.com/antonyrajan" target="_blank" class="contact-card">
+          <div class="contact-card-icon">⌥</div>
+          <div><div class="contact-card-label">GitHub</div><div class="contact-card-val">github.com/antonyrajan</div></div>
+        </a>
+      </div>
+      <div class="contact-form-card">
+        <div class="cf-title">Send a message</div>
+        <div class="cf-grid">
+          <div class="cf-field"><label class="cf-lbl">Name</label><input class="cf-inp" id="cf-name" type="text" placeholder="Your name"/></div>
+          <div class="cf-field"><label class="cf-lbl">Email</label><input class="cf-inp" id="cf-email" type="email" placeholder="your@email.com"/></div>
+          <div class="cf-field full"><label class="cf-lbl">Subject</label><input class="cf-inp" id="cf-subject" type="text" placeholder="Internship / Collaboration / etc."/></div>
+          <div class="cf-field full"><label class="cf-lbl">Message</label><textarea class="cf-ta" id="cf-message" placeholder="What's on your mind?"></textarea></div>
+        </div>
+        <div id="cf-msg" class="cf-msg"></div>
+        <button class="cf-submit" id="cf-btn" onclick="submitContact()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── NOW PLAYING BAR ─────────────────────────────── -->
+<div id="now-playing">
+  <div class="np-left">
+    <div class="np-thumb" id="np-thumb">AR</div>
+    <div class="np-info">
+      <div class="np-title" id="np-title">EventHub</div>
+      <div class="np-artist" id="np-artist">Java · Spring Boot · MySQL</div>
+    </div>
+    <button class="np-heart">♥</button>
+  </div>
+
+  <div class="np-center">
+    <div class="np-controls">
+      <button class="np-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+      <button class="np-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="19,20 9,12 19,4"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/></svg></button>
+      <button class="np-play" id="np-play-btn" onclick="togglePlay()">
+        <svg viewBox="0 0 24 24" id="np-play-icon"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="np-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/></svg></button>
+      <button class="np-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18 18 6M6 6h12v12"/></svg></button>
+    </div>
+    <div class="np-progress">
+      <span class="np-time" id="np-current">0:00</span>
+      <div class="np-bar"><div class="np-bar-fill" id="np-bar" style="width:0%"></div></div>
+      <span class="np-time" id="np-total">3:45</span>
+    </div>
+  </div>
+
+  <div class="np-right">
+    <div class="np-vol">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+      <div class="np-vol-bar"><div class="np-vol-fill"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+// ── Cursor ───────────────────────────
+const cur=document.getElementById('cur'), trail=document.getElementById('cur-trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function anim(){tx+=(mx-tx)*.12;ty+=(my-ty)*.12;trail.style.left=tx+'px';trail.style.top=ty+'px';requestAnimationFrame(anim);})();
+
+// ── Page navigation ──────────────────
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active','fade-in');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('main').scrollTo({top:0,behavior:'smooth'});
+  setTimeout(triggerReveals, 100);
+  return false;
+}
+
+// ── Scroll reveals ───────────────────
+function triggerReveals(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('in'),i*80);});
+  },{threshold:.1});
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>obs.observe(el));
+}
+triggerReveals();
+
+// Topbar fill on scroll
+document.getElementById('main').addEventListener('scroll',function(){
+  document.getElementById('topbar').classList.toggle('filled', this.scrollTop>10);
+});
+
+// ── Skill rings ──────────────────────
+const ringObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const fill=e.target.querySelector('.skill-ring-fill');
+      if(fill){
+        const pct=parseFloat(fill.dataset.pct)||.5;
+        const circ=2*Math.PI*34;
+        fill.style.strokeDashoffset=circ*(1-pct);
+      }
+      e.target.classList.add('in');
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.card').forEach(c=>ringObs.observe(c));
+// Init rings to 0
+document.querySelectorAll('.skill-ring-fill').forEach(f=>{
+  const circ=2*Math.PI*34;
+  f.style.strokeDashoffset=circ;
+});
+
+// ── Now Playing ──────────────────────
+let isPlaying=true, progress=0, interval=null;
+const DURATION=225; // 3:45 in seconds
+
+function fmt(s){return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;}
+
+function startProgress(){
+  clearInterval(interval);
+  interval=setInterval(()=>{
+    if(!isPlaying)return;
+    progress+=.5;
+    if(progress>DURATION)progress=0;
+    document.getElementById('np-bar').style.width=(progress/DURATION*100)+'%';
+    document.getElementById('np-current').textContent=fmt(progress);
+  },500);
+}
+startProgress();
+
+function togglePlay(){
+  isPlaying=!isPlaying;
+  const icon=document.getElementById('np-play-icon');
+  const heroBtn=document.getElementById('hero-play');
+  if(isPlaying){
+    icon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    heroBtn.innerHTML='<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  } else {
+    icon.innerHTML='<polygon points="5,3 19,12 5,21"/>';
+    heroBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>';
+  }
+}
+
+function playTrack(row, title, artist){
+  document.querySelectorAll('.track-row').forEach(r=>{
+    r.classList.remove('playing');
+    const num=r.querySelector('.track-num');
+    const eq=num.querySelector('.eq');
+    if(eq){num.innerHTML=num.dataset.originalNum||'?';}
+  });
+  row.classList.add('playing');
+  const num=row.querySelector('.track-num');
+  num.dataset.originalNum=num.textContent;
+  num.innerHTML='<div class="eq"><span></span><span></span><span></span></div>';
+  document.getElementById('np-title').textContent=title;
+  document.getElementById('np-artist').textContent=artist;
+  progress=0; isPlaying=true;
+  const icon=document.getElementById('np-play-icon');
+  icon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+}
+
+// ── Contact Form ─────────────────────
+async function submitContact(){
+  const btn=document.getElementById('cf-btn');
+  const msg=document.getElementById('cf-msg');
+  const name=document.getElementById('cf-name').value.trim();
+  const email=document.getElementById('cf-email').value.trim();
+  const subject=document.getElementById('cf-subject').value.trim();
+  const message=document.getElementById('cf-message').value.trim();
+  msg.className='cf-msg';
+  if(!name||!email||!subject||!message){msg.textContent='Please fill all fields.';msg.className='cf-msg err';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent='Valid email required.';msg.className='cf-msg err';return;}
+  btn.disabled=true;btn.textContent='Sending...';
+  try{
+    const res=await fetch(`${API}/api/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,subject,message})});
+    const data=await res.json();
+    if(data.success){msg.textContent='✓ Message sent! I\'ll reply within 48 hours.';msg.className='cf-msg ok';['cf-name','cf-email','cf-subject','cf-message'].forEach(id=>document.getElementById(id).value='');}
+    else{msg.textContent=data.error||'Send failed.';msg.className='cf-msg err';}
+  }catch(e){msg.textContent='Network error — email me directly at itsantonyrajan@gmail.com';msg.className='cf-msg err';}
+  finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';}
+}
+</script>
+</body>
+</html>
